@@ -7,36 +7,80 @@ import {
   Shield, AlertTriangle, Activity, Search, Database, TrendingUp, Zap,
   Check, X, ChevronDown, ChevronRight, Radio, Server, Wifi, Monitor,
   RefreshCw, Filter, Clock, Eye, EyeOff, Layers, Crosshair,
-  Link2, Settings, WifiOff, Plug
+  Link2, Settings, WifiOff, Plug, Sun, Moon
 } from "lucide-react";
 
 /* ============================== DESIGN TOKENS ============================== */
 const STYLE = `
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* ── Dark theme (default) ── */
+:root, [data-theme="dark"] {
+  --ink-0: #060810;
+  --ink-1: #0D1117;
+  --ink-2: #161B22;
+  --ink-3: #21262D;
+  --ink-4: #2D333B;
+  --hairline: #30363D;
+  --hairline-soft: #21262D;
+  --text-hi: #F0F6FC;
+  --text-mid: #8B949E;
+  --text-lo: #484F58;
+  --signal: #58A6FF;
+  --signal-dim: #1F3A5F;
+  --signal-glow: rgba(88,166,255,0.12);
+  --baseline: #3FB950;
+  --baseline-dim: #0D2516;
+  --tier-green: #3FB950;
+  --tier-green-bg: #0D2516;
+  --tier-green-glow: rgba(63,185,80,0.08);
+  --tier-amber: #D29922;
+  --tier-amber-bg: #272115;
+  --tier-amber-glow: rgba(210,153,34,0.08);
+  --tier-red: #F85149;
+  --tier-red-bg: #2D1117;
+  --tier-red-glow: rgba(248,81,73,0.08);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+  --topbar-bg: rgba(6,8,16,0.85);
+}
+
+/* ── Light theme ── */
+[data-theme="light"] {
+  --ink-0: #F6F8FA;
+  --ink-1: #FFFFFF;
+  --ink-2: #F0F2F5;
+  --ink-3: #E4E8EE;
+  --ink-4: #D5DAE3;
+  --hairline: #D0D7DE;
+  --hairline-soft: #E4E8EE;
+  --text-hi: #0D1117;
+  --text-mid: #4B5563;
+  --text-lo: #9CA3AF;
+  --signal: #0969DA;
+  --signal-dim: #DDF4FF;
+  --signal-glow: rgba(9,105,218,0.08);
+  --baseline: #1A7F37;
+  --baseline-dim: #DCFFE4;
+  --tier-green: #1A7F37;
+  --tier-green-bg: #DCFFE4;
+  --tier-green-glow: rgba(26,127,55,0.06);
+  --tier-amber: #9A6700;
+  --tier-amber-bg: #FFF8C5;
+  --tier-amber-glow: rgba(154,103,0,0.06);
+  --tier-red: #CF222E;
+  --tier-red-bg: #FFEBE9;
+  --tier-red-glow: rgba(207,34,46,0.06);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+  --topbar-bg: rgba(246,248,250,0.9);
+}
+
+/* ── Fonts ── */
 :root {
-  --ink-0: #070A12;
-  --ink-1: #0C111D;
-  --ink-2: #131A29;
-  --ink-3: #1B2436;
-  --hairline: #232E44;
-  --hairline-soft: #1A2337;
-  --text-hi: #E7ECF6;
-  --text-mid: #9AA5BC;
-  --text-lo: #5E6883;
-  --signal: #6C8EF5;
-  --signal-dim: #3A4A78;
-  --baseline: #45C7C1;
-  --baseline-dim: #1E3D3B;
-  --tier-green: #3FBF8F;
-  --tier-green-bg: #10251F;
-  --tier-amber: #E8A33D;
-  --tier-amber-bg: #2A2013;
-  --tier-red: #E5484D;
-  --tier-red-bg: #2E1417;
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
 }
 
 .ng-root * { box-sizing: border-box; }
@@ -48,169 +92,229 @@ const STYLE = `
   display: flex;
   position: relative;
   isolation: isolate;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 .ng-root ::selection { background: var(--signal-dim); color: var(--text-hi); }
 .ng-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.ng-display { font-family: var(--font-display); letter-spacing: -0.01em; }
+.ng-display { font-family: var(--font-display); letter-spacing: -0.02em; }
 
-/* ---------- layout shell ---------- */
+/* ── Sidebar ── */
 .ng-sidebar {
-  width: 216px;
+  width: 228px;
   flex: 0 0 auto;
   background: var(--ink-1);
   border-right: 1px solid var(--hairline-soft);
   display: flex;
   flex-direction: column;
-  padding: 20px 14px;
-  gap: 4px;
+  padding: 18px 12px;
+  gap: 2px;
   position: sticky;
   top: 0;
   height: 100vh;
+  transition: background 0.2s ease;
 }
+
+/* ── Brand / Logo ── */
 .ng-brand {
-  display: flex; align-items: center; gap: 10px;
-  padding: 4px 8px 20px 8px;
+  display: flex; align-items: center; gap: 11px;
+  padding: 6px 8px 20px 8px;
   border-bottom: 1px solid var(--hairline-soft);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .ng-brand-mark {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: linear-gradient(160deg, var(--signal), var(--baseline));
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(145deg, #1565C0 0%, #0D47A1 50%, #0A2472 100%);
   display: flex; align-items: center; justify-content: center;
   flex: 0 0 auto;
+  box-shadow: 0 0 0 1px rgba(88,166,255,0.2), var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
 }
-.ng-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
-.ng-brand-text b { font-family: var(--font-display); font-size: 15px; font-weight: 600; }
-.ng-brand-text span { font-size: 10.5px; color: var(--text-lo); letter-spacing: 0.04em; text-transform: uppercase; }
+.ng-brand-mark::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  border-radius: inherit;
+}
+.ng-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.ng-brand-name {
+  font-family: var(--font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: -0.02em; color: var(--text-hi);
+}
+.ng-brand-sub {
+  font-size: 10px; color: var(--text-lo); letter-spacing: 0.06em;
+  text-transform: uppercase; font-weight: 500; margin-top: 1px;
+}
 
+/* ── Nav items ── */
 .ng-navitem {
   display: flex; align-items: center; gap: 10px;
-  padding: 9px 10px; border-radius: 8px;
-  font-size: 13.5px; color: var(--text-mid); cursor: pointer;
-  border: 1px solid transparent;
-  transition: background 0.12s ease, color 0.12s ease;
-  background: transparent;
-  width: 100%; text-align: left;
+  padding: 9px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; color: var(--text-mid); cursor: pointer;
+  border: none; transition: all 0.12s ease;
+  background: transparent; width: 100%; text-align: left;
+  position: relative;
 }
 .ng-navitem:hover { background: var(--ink-2); color: var(--text-hi); }
-.ng-navitem.active { background: var(--ink-3); color: var(--text-hi); border-color: var(--hairline); }
-.ng-navitem .ng-navcount {
-  margin-left: auto; font-family: var(--font-mono); font-size: 11px;
-  color: var(--text-lo); background: var(--ink-0); border-radius: 5px; padding: 1px 6px;
+.ng-navitem.active {
+  background: var(--signal-glow);
+  color: var(--signal);
+  font-weight: 600;
 }
-.ng-navitem.active .ng-navcount { color: var(--signal); }
+.ng-navitem.active::before {
+  content: '';
+  position: absolute; left: 0; top: 25%; bottom: 25%;
+  width: 3px; border-radius: 0 3px 3px 0;
+  background: var(--signal);
+  margin-left: -12px;
+}
+.ng-navitem .ng-navcount {
+  margin-left: auto; font-family: var(--font-mono); font-size: 10.5px;
+  color: var(--tier-red); background: var(--tier-red-bg);
+  border-radius: 5px; padding: 1px 6px; font-weight: 600;
+}
 
 .ng-sidebar-foot { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--hairline-soft); }
-.ng-pulse-row { display: flex; align-items: center; gap: 8px; padding: 8px; font-size: 11.5px; color: var(--text-lo); }
-.ng-pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--tier-green); flex: 0 0 auto; box-shadow: 0 0 0 3px rgba(63,191,143,0.15); }
-.ng-pulse-dot.sim { background: var(--tier-amber); box-shadow: 0 0 0 3px rgba(232,163,61,0.15); }
-.ng-pulse-dot.live { background: var(--signal); box-shadow: 0 0 0 3px rgba(108,142,245,0.18); }
-.ng-pulse-dot.off { background: var(--text-lo); box-shadow: none; }
+.ng-pulse-row { display: flex; align-items: center; gap: 8px; padding: 8px; font-size: 11px; color: var(--text-lo); }
+.ng-pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--tier-green); flex: 0 0 auto; }
+.ng-pulse-dot.sim { background: var(--tier-amber); animation: pulse-amber 1.5s infinite; }
+.ng-pulse-dot.live { background: var(--signal); animation: pulse-blue 1.5s infinite; }
+.ng-pulse-dot.off { background: var(--text-lo); }
+@keyframes pulse-amber { 0%,100%{box-shadow:0 0 0 0 rgba(210,153,34,0.4)} 50%{box-shadow:0 0 0 5px rgba(210,153,34,0)} }
+@keyframes pulse-blue  { 0%,100%{box-shadow:0 0 0 0 rgba(88,166,255,0.4)}  50%{box-shadow:0 0 0 5px rgba(88,166,255,0)}  }
 
 .ng-conn-panel { padding: 8px; display: flex; flex-direction: column; gap: 7px; }
-.ng-conn-label { font-size: 10.5px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+.ng-conn-label { font-size: 10px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 6px; font-weight: 600; }
 .ng-conn-input-row { display: flex; gap: 6px; }
 .ng-conn-input {
   flex: 1 1 auto; min-width: 0; background: var(--ink-0); border: 1px solid var(--hairline);
-  color: var(--text-hi); font-family: var(--font-mono); font-size: 11px; border-radius: 6px;
-  padding: 6px 8px; outline: none;
+  color: var(--text-hi); font-family: var(--font-mono); font-size: 10.5px; border-radius: 6px;
+  padding: 6px 8px; outline: none; transition: border-color 0.12s;
 }
-.ng-conn-input:focus { border-color: var(--signal-dim); }
+.ng-conn-input:focus { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-glow); }
 .ng-conn-go {
   flex: 0 0 auto; background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 6px;
   color: var(--text-mid); width: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: all 0.12s;
 }
-.ng-conn-go:hover { border-color: var(--signal-dim); color: var(--text-hi); }
-.ng-conn-err { font-size: 10.5px; color: var(--tier-red); line-height: 1.4; }
+.ng-conn-go:hover { border-color: var(--signal); color: var(--signal); }
+.ng-conn-err { font-size: 10px; color: var(--tier-red); line-height: 1.4; }
 
-/* ---------- main column ---------- */
+/* ── Main column ── */
 .ng-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
 .ng-topbar {
   position: sticky; top: 0; z-index: 5;
-  background: rgba(7,10,18,0.9); backdrop-filter: blur(6px);
+  background: var(--topbar-bg); backdrop-filter: blur(12px) saturate(180%);
   border-bottom: 1px solid var(--hairline-soft);
-  padding: 16px 28px;
+  padding: 14px 28px;
+  transition: background 0.2s ease;
 }
 .ng-topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.ng-page-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
-.ng-page-sub { font-size: 12.5px; color: var(--text-lo); margin-top: 2px; }
+.ng-page-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.ng-page-sub { font-size: 12px; color: var(--text-lo); margin-top: 2px; font-weight: 400; }
 
+/* ── Buttons ── */
 .ng-btn {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font-body); font-size: 12.5px; font-weight: 500;
-  padding: 8px 13px; border-radius: 7px; cursor: pointer;
+  padding: 7px 13px; border-radius: 7px; cursor: pointer;
   border: 1px solid var(--hairline); background: var(--ink-2); color: var(--text-hi);
-  transition: border-color 0.12s ease, background 0.12s ease, transform 0.05s ease;
-  white-space: nowrap;
+  transition: all 0.12s ease; white-space: nowrap;
 }
-.ng-btn:hover { border-color: var(--signal-dim); background: var(--ink-3); }
-.ng-btn:active { transform: scale(0.98); }
-.ng-btn-primary { background: var(--signal); border-color: var(--signal); color: #0A0F1C; font-weight: 600; }
-.ng-btn-primary:hover { background: #7E9DF8; border-color: #7E9DF8; }
-.ng-btn-ghost { background: transparent; }
+.ng-btn:hover { border-color: var(--signal); background: var(--ink-3); box-shadow: 0 0 0 3px var(--signal-glow); }
+.ng-btn:active { transform: scale(0.97); }
+.ng-btn-primary {
+  background: var(--signal); border-color: var(--signal); color: #fff; font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.ng-btn-primary:hover { filter: brightness(1.1); border-color: var(--signal); }
+.ng-btn-ghost { background: transparent; border-color: var(--hairline); }
+.ng-btn-ghost:hover { background: var(--ink-2); }
 .ng-btn-sm { padding: 5px 10px; font-size: 11.5px; border-radius: 6px; }
-.ng-btn-confirm { border-color: rgba(229,72,77,0.4); color: var(--tier-red); background: var(--tier-red-bg); }
-.ng-btn-confirm:hover { border-color: var(--tier-red); }
+.ng-btn-confirm { border-color: rgba(248,81,73,0.3); color: var(--tier-red); background: var(--tier-red-bg); }
+.ng-btn-confirm:hover { border-color: var(--tier-red); box-shadow: 0 0 0 3px var(--tier-red-glow); }
 .ng-btn-dismiss { border-color: var(--hairline); color: var(--text-mid); }
-.ng-btn-dismiss:hover { border-color: var(--baseline); color: var(--baseline); }
+.ng-btn-dismiss:hover { border-color: var(--hairline); color: var(--text-hi); background: var(--ink-3); }
+
+/* ── Theme toggle ── */
+.ng-theme-toggle {
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--hairline); background: var(--ink-2); color: var(--text-mid);
+  display: flex; align-items: center; justify-content: center; transition: all 0.12s;
+  flex: 0 0 auto;
+}
+.ng-theme-toggle:hover { border-color: var(--signal); color: var(--signal); background: var(--signal-glow); }
 
 .ng-content { padding: 22px 28px 60px 28px; flex: 1 1 auto; }
 
-/* ---------- stat strip ---------- */
-.ng-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 22px; }
+/* ── Stat strip ── */
+.ng-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
 .ng-stat {
-  background: var(--ink-1); border: 1px solid var(--hairline-soft); border-radius: 10px;
-  padding: 14px 16px;
+  background: var(--ink-1); border: 1px solid var(--hairline-soft); border-radius: 12px;
+  padding: 16px 18px; box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  position: relative; overflow: hidden;
 }
-.ng-stat-label { font-size: 11px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-.ng-stat-value { font-family: var(--font-display); font-size: 24px; font-weight: 600; }
+.ng-stat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--signal) 0%, transparent 100%);
+  opacity: 0.6;
+}
+.ng-stat-label { font-size: 10.5px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; font-weight: 600; }
+.ng-stat-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
 .ng-stat-value.green { color: var(--tier-green); }
 .ng-stat-value.amber { color: var(--tier-amber); }
 .ng-stat-value.red { color: var(--tier-red); }
 
-/* ---------- waveform banner ---------- */
-.ng-waveband { border: 1px solid var(--hairline-soft); background: var(--ink-1); border-radius: 10px; padding: 12px 16px 4px 16px; margin-bottom: 22px; overflow: hidden; }
-.ng-waveband-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.ng-waveband-title { font-size: 11px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.05em; }
-
-/* ---------- filter row ---------- */
+/* ── Filter bar ── */
 .ng-filterbar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 .ng-chip {
-  font-size: 12px; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--hairline); color: var(--text-mid); background: var(--ink-1);
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: 6px; transition: all 0.12s;
 }
-.ng-chip.active { border-color: var(--signal); color: var(--text-hi); background: var(--ink-3); }
+.ng-chip:hover { border-color: var(--signal); color: var(--text-hi); }
+.ng-chip.active { border-color: var(--signal); color: var(--signal); background: var(--signal-glow); font-weight: 600; }
 .ng-search {
   display: flex; align-items: center; gap: 7px;
   border: 1px solid var(--hairline); background: var(--ink-1); border-radius: 8px;
   padding: 7px 11px; flex: 1 1 200px; max-width: 320px;
+  transition: border-color 0.12s, box-shadow 0.12s;
 }
+.ng-search:focus-within { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-glow); }
 .ng-search input { background: transparent; border: none; outline: none; color: var(--text-hi); font-size: 13px; width: 100%; font-family: var(--font-body); }
 .ng-search input::placeholder { color: var(--text-lo); }
 .ng-select {
   border: 1px solid var(--hairline); background: var(--ink-1); color: var(--text-mid);
   border-radius: 8px; padding: 7px 10px; font-size: 12.5px; font-family: var(--font-body); outline: none;
+  transition: border-color 0.12s;
 }
+.ng-select:focus { border-color: var(--signal); }
 
-/* ---------- alert cards ---------- */
-.ng-alertgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+/* ── Alert cards ── */
+.ng-alertgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
 .ng-card {
-  background: var(--ink-1); border: 1px solid var(--hairline-soft); border-radius: 11px;
-  padding: 15px 16px; display: flex; flex-direction: column; gap: 11px;
+  background: var(--ink-1); border: 1px solid var(--hairline-soft); border-radius: 12px;
+  padding: 16px 17px; display: flex; flex-direction: column; gap: 12px;
   border-left: 3px solid var(--hairline);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
 }
+.ng-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
 .ng-card.tier-green { border-left-color: var(--tier-green); }
+.ng-card.tier-green:hover { box-shadow: var(--shadow-md), 0 0 0 1px var(--tier-green-glow); }
 .ng-card.tier-amber { border-left-color: var(--tier-amber); }
+.ng-card.tier-amber:hover { box-shadow: var(--shadow-md), 0 0 0 1px var(--tier-amber-glow); }
 .ng-card.tier-red { border-left-color: var(--tier-red); }
+.ng-card.tier-red:hover { box-shadow: var(--shadow-md), 0 0 0 1px var(--tier-red-glow); }
 
 .ng-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.ng-entity-id { font-family: var(--font-mono); font-size: 14.5px; font-weight: 500; color: var(--text-hi); }
-.ng-entity-type { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-lo); margin-top: 3px; }
+.ng-entity-id { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-hi); }
+.ng-entity-type { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-lo); margin-top: 3px; font-weight: 500; }
 
 .ng-risk-badge {
-  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
-  padding: 3px 9px; border-radius: 6px; flex: 0 0 auto;
+  font-family: var(--font-mono); font-size: 12.5px; font-weight: 700;
+  padding: 3px 9px; border-radius: 6px; flex: 0 0 auto; letter-spacing: 0.02em;
 }
 .ng-risk-badge.tier-green { color: var(--tier-green); background: var(--tier-green-bg); }
 .ng-risk-badge.tier-amber { color: var(--tier-amber); background: var(--tier-amber-bg); }
@@ -218,85 +322,93 @@ const STYLE = `
 
 .ng-threat-row { display: flex; align-items: center; gap: 8px; }
 .ng-threat-tag {
-  font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
   padding: 3px 8px; border-radius: 5px; background: var(--ink-3); color: var(--text-mid);
 }
 .ng-incident-count { font-size: 11px; color: var(--text-lo); font-family: var(--font-mono); }
 
-.ng-detect-source { font-size: 12px; color: var(--text-mid); display: flex; align-items: center; gap: 6px; }
-.ng-score-bars { display: flex; flex-direction: column; gap: 5px; }
+.ng-detect-source { font-size: 12px; color: var(--text-mid); display: flex; align-items: center; gap: 6px; font-weight: 500; }
+.ng-score-bars { display: flex; flex-direction: column; gap: 6px; }
 .ng-score-bar-row { display: flex; align-items: center; gap: 8px; }
-.ng-score-bar-label { font-size: 10.5px; color: var(--text-lo); width: 54px; flex: 0 0 auto; }
-.ng-score-bar-track { flex: 1 1 auto; height: 5px; background: var(--ink-3); border-radius: 3px; overflow: hidden; }
-.ng-score-bar-fill { height: 100%; border-radius: 3px; }
+.ng-score-bar-label { font-size: 10px; color: var(--text-lo); width: 52px; flex: 0 0 auto; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+.ng-score-bar-track { flex: 1 1 auto; height: 4px; background: var(--ink-3); border-radius: 4px; overflow: hidden; }
+.ng-score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
 
 .ng-card-actions { display: flex; gap: 8px; margin-top: 2px; }
 .ng-card-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-lo); }
-.ng-status-pill { font-family: var(--font-mono); font-size: 10.5px; padding: 2px 7px; border-radius: 5px; border: 1px solid var(--hairline); }
-.ng-status-pill.confirmed { color: var(--tier-red); border-color: rgba(229,72,77,0.35); }
+.ng-status-pill {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  padding: 2px 7px; border-radius: 5px; border: 1px solid var(--hairline);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.ng-status-pill.confirmed { color: var(--tier-red); border-color: var(--tier-red-bg); background: var(--tier-red-bg); }
 .ng-status-pill.false_positive { color: var(--text-lo); }
 .ng-status-pill.open { color: var(--signal); border-color: var(--signal-dim); }
+.ng-status-pill.secure { color: var(--tier-green); border-color: var(--tier-green-bg); background: var(--tier-green-bg); }
 
-.ng-expand-btn { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--signal); cursor: pointer; user-select: none; }
+.ng-expand-btn { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--signal); cursor: pointer; user-select: none; font-weight: 500; }
+.ng-expand-btn:hover { opacity: 0.8; }
 .ng-detail-panel { border-top: 1px solid var(--hairline-soft); padding-top: 10px; margin-top: 2px; }
 
 .ng-empty { text-align: center; padding: 60px 20px; color: var(--text-lo); }
-.ng-empty svg { margin-bottom: 10px; opacity: 0.5; }
+.ng-empty svg { margin-bottom: 12px; opacity: 0.35; }
 
-/* ---------- telemetry table ---------- */
-.ng-table-wrap { border: 1px solid var(--hairline-soft); border-radius: 10px; overflow: hidden; background: var(--ink-1); }
+/* ── Telemetry table ── */
+.ng-table-wrap { border: 1px solid var(--hairline-soft); border-radius: 12px; overflow: hidden; background: var(--ink-1); box-shadow: var(--shadow-sm); }
 .ng-table-scroll { overflow-x: auto; }
 table.ng-table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 780px; }
 table.ng-table th {
-  text-align: left; font-weight: 500; color: var(--text-lo); text-transform: uppercase;
-  letter-spacing: 0.04em; font-size: 10.5px; padding: 10px 14px; border-bottom: 1px solid var(--hairline-soft);
+  text-align: left; font-weight: 600; color: var(--text-lo); text-transform: uppercase;
+  letter-spacing: 0.05em; font-size: 10px; padding: 10px 16px; border-bottom: 1px solid var(--hairline-soft);
   background: var(--ink-2); position: sticky; top: 0;
 }
-table.ng-table td { padding: 9px 14px; border-bottom: 1px solid var(--hairline-soft); font-family: var(--font-mono); color: var(--text-mid); }
+table.ng-table td { padding: 10px 16px; border-bottom: 1px solid var(--hairline-soft); font-family: var(--font-mono); color: var(--text-mid); font-size: 12px; }
 table.ng-table tr:last-child td { border-bottom: none; }
 table.ng-table tr:hover td { background: var(--ink-2); color: var(--text-hi); }
 .ng-flag-fail { color: var(--tier-red) !important; }
 
-/* ---------- baseline viewer ---------- */
+/* ── Baseline viewer ── */
 .ng-entity-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
 .ng-entity-chip {
-  display: flex; align-items: center; gap: 8px; padding: 9px 13px; border-radius: 9px;
+  display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 10px;
   border: 1px solid var(--hairline); background: var(--ink-1); cursor: pointer; font-size: 12.5px;
+  transition: all 0.12s; font-weight: 500;
 }
-.ng-entity-chip.active { border-color: var(--signal); background: var(--ink-3); }
+.ng-entity-chip:hover { border-color: var(--signal); }
+.ng-entity-chip.active { border-color: var(--signal); background: var(--signal-glow); color: var(--signal); }
 .ng-entity-chip .ng-mono { color: var(--text-hi); }
 
 .ng-two-col { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.6fr); gap: 16px; }
-.ng-panel { background: var(--ink-1); border: 1px solid var(--hairline-soft); border-radius: 10px; padding: 16px; }
-.ng-panel-title { font-size: 11px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
-.ng-kv-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--hairline-soft); font-size: 13px; }
+.ng-panel { background: var(--ink-1); border: 1px solid var(--hairline-soft); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-sm); }
+.ng-panel-title { font-size: 10.5px; color: var(--text-lo); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; font-weight: 700; }
+.ng-kv-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--hairline-soft); font-size: 13px; }
 .ng-kv-row:last-child { border-bottom: none; }
-.ng-kv-row span:first-child { color: var(--text-lo); }
-.ng-kv-row span:last-child { font-family: var(--font-mono); color: var(--text-hi); }
+.ng-kv-row span:first-child { color: var(--text-lo); font-weight: 500; }
+.ng-kv-row span:last-child { font-family: var(--font-mono); color: var(--text-hi); font-size: 12px; }
 
-.ng-legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
-.ng-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-lo); }
+.ng-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+.ng-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-lo); font-weight: 500; }
 .ng-legend-swatch { width: 10px; height: 10px; border-radius: 3px; }
 
-/* ---------- toast ---------- */
+/* ── Toast ── */
 .ng-toast-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 40; display: flex; flex-direction: column; gap: 8px; }
 .ng-toast {
-  background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 9px;
+  background: var(--ink-2); border: 1px solid var(--hairline); border-radius: 10px;
   padding: 11px 15px; font-size: 12.5px; color: var(--text-hi); display: flex; align-items: center; gap: 9px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4); min-width: 220px; max-width: 340px;
-  animation: ng-toast-in 0.2s ease;
+  box-shadow: var(--shadow-md); min-width: 220px; max-width: 360px; font-weight: 500;
+  animation: ng-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
-@keyframes ng-toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ng-toast-in { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-/* ---------- bottom nav (mobile) ---------- */
+/* ── Bottom nav (mobile) ── */
 .ng-bottomnav { display: none; }
 
-/* ---------- scrollbars ---------- */
-.ng-root ::-webkit-scrollbar { height: 8px; width: 8px; }
-.ng-root ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 5px; }
+/* ── Scrollbars ── */
+.ng-root ::-webkit-scrollbar { height: 6px; width: 6px; }
+.ng-root ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 4px; }
 .ng-root ::-webkit-scrollbar-track { background: transparent; }
 
-/* ---------- responsive ---------- */
+/* ── Responsive ── */
 @media (max-width: 900px) {
   .ng-two-col { grid-template-columns: 1fr; }
   .ng-stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -382,14 +494,18 @@ function scoreEvent(ev, baseline) {
   const z = baseline.sigma_bytes > 0 ? (ev.bytes_up - baseline.mu_bytes) / baseline.sigma_bytes : 0;
   const s_stat_norm = sigmoid(z - 2.3);
 
-  const rule_override_flag = f.port_risk_level === 2 && ev.entity_type !== "admin_server" ? 1 : 0;
+  // Rule fires for: restricted port on non-admin, OR massive external upload (exfiltration rule)
+  const isExternalDest = !ev.dest_ip?.startsWith("10.") && !ev.dest_ip?.startsWith("192.168.");
+  const exfilRule = isExternalDest && ev.bytes_up > baseline.mu_bytes * 3;
+  const rule_override_flag = (f.port_risk_level === 2 && ev.entity_type !== "admin_server") || exfilRule ? 1 : 0;
 
   let fused = 1 - (1 - s_ml_norm) * (1 - s_stat_norm);
-  if (rule_override_flag) fused = Math.max(fused, 0.88);
+  if (rule_override_flag) fused = Math.max(fused, 0.88); // rule floors risk at 88%
   const final_risk_pct = Math.round(fused * 1000) / 10;
 
   let threat_classification = "anomaly";
   if (f.effective_logins >= 5) threat_classification = "brute_force";
+  else if (exfilRule) threat_classification = "exfiltration";
   else if (rule_override_flag) threat_classification = "lateral_move";
   else if (f.upload_ratio > 0.72 && z > 2) threat_classification = "exfiltration";
 
@@ -603,27 +719,6 @@ function groupAlerts(alerts) {
   return groups;
 }
 
-/* ============================== WAVEFORM BANNER ============================== */
-function WaveformBanner({ points, hasCritical }) {
-  const width = 1000, height = 70;
-  const path = useMemo(() => {
-    const step = width / (points.length - 1 || 1);
-    return points.map((p, i) => `${i === 0 ? "M" : "L"} ${(i * step).toFixed(1)} ${(height - p * height).toFixed(1)}`).join(" ");
-  }, [points]);
-  return (
-    <div className="ng-waveband">
-      <div className="ng-waveband-head">
-        <span className="ng-waveband-title">Live network signal</span>
-        <span className="ng-mono" style={{ fontSize: 11, color: hasCritical ? "var(--tier-red)" : "var(--baseline)" }}>
-          {hasCritical ? "deviation detected" : "within baseline"}
-        </span>
-      </div>
-      <svg viewBox={`0 0 ${width} ${height}`} width="100%" height={height} preserveAspectRatio="none">
-        <path d={path} fill="none" stroke={hasCritical ? "var(--tier-red)" : "var(--baseline)"} strokeWidth="1.6" opacity="0.85" />
-      </svg>
-    </div>
-  );
-}
 
 /* ============================== BASELINE CHART ============================== */
 function BaselineChart({ entity, events, height = 220 }) {
@@ -727,9 +822,6 @@ function AlertCard({ group, onConfirm, onDismiss, telemetryByEntity, baselines }
 
       {actionable && (
         <div className="ng-card-actions">
-          <button className="ng-btn ng-btn-sm ng-btn-confirm" onClick={() => onConfirm(group)}>
-            <AlertTriangle size={13} /> Confirm threat
-          </button>
           <button className="ng-btn ng-btn-sm ng-btn-dismiss" onClick={() => onDismiss(group)}>
             <X size={13} /> Dismiss (false positive)
           </button>
@@ -743,7 +835,7 @@ function AlertCard({ group, onConfirm, onDismiss, telemetryByEntity, baselines }
 function LiveFeedView({ alerts, telemetry, onConfirm, onDismiss, baselines }) {
   const [tierFilter, setTierFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [showSecure, setShowSecure] = useState(false);
+  const [showSecure, setShowSecure] = useState(true);
 
   const telemetryByEntity = useMemo(() => {
     const map = {};
@@ -778,13 +870,14 @@ function LiveFeedView({ alerts, telemetry, onConfirm, onDismiss, baselines }) {
         <select className="ng-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="all">All statuses</option>
           <option value="open">Open</option>
+          <option value="secure">Secure</option>
           <option value="acknowledged">Acknowledged</option>
           <option value="confirmed">Confirmed</option>
           <option value="false_positive">False positive</option>
         </select>
         <button className="ng-chip" onClick={() => setShowSecure((v) => !v)} style={{ marginLeft: "auto" }}>
           {showSecure ? <Eye size={12} /> : <EyeOff size={12} />}
-          {showSecure ? "Hiding secure: off" : "Secure events hidden"}
+          {showSecure ? "Secure events visible" : "Secure events hidden"}
         </button>
       </div>
 
@@ -977,14 +1070,56 @@ export default function App() {
   const seedRef = useRef(null);
   if (!seedRef.current) seedRef.current = seedData();
 
-  const [telemetry, setTelemetry] = useState(seedRef.current.telemetry);
-  const [alerts, setAlerts] = useState(seedRef.current.alerts);
-  const [baselines, setBaselines] = useState(seedRef.current.baselines);
-  const alertSeqRef = useRef(seedRef.current.alertSeq);
+  // ---- persistent storage helpers ----
+  const LS_KEYS = { alerts: "ng_alerts", telemetry: "ng_telemetry", baselines: "ng_baselines", alertSeq: "ng_alert_seq" };
+
+  const loadLS = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) return JSON.parse(raw);
+    } catch (_) {}
+    return fallback;
+  };
+
+  const [telemetry, setTelemetry] = useState(() =>
+    loadLS(LS_KEYS.telemetry, seedRef.current.telemetry)
+  );
+  const [alerts, setAlerts] = useState(() =>
+    loadLS(LS_KEYS.alerts, seedRef.current.alerts)
+  );
+  const [baselines, setBaselines] = useState(() =>
+    loadLS(LS_KEYS.baselines, seedRef.current.baselines)
+  );
+  const alertSeqRef = useRef(
+    loadLS(LS_KEYS.alertSeq, seedRef.current.alertSeq)
+  );
+
+  // Sync state → localStorage whenever it changes
+  useEffect(() => {
+    try { localStorage.setItem(LS_KEYS.alerts, JSON.stringify(alerts)); } catch (_) {}
+  }, [alerts]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_KEYS.telemetry, JSON.stringify(telemetry)); } catch (_) {}
+  }, [telemetry]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_KEYS.baselines, JSON.stringify(baselines)); } catch (_) {}
+  }, [baselines]);
+  // alertSeqRef is a ref — patch it after every simulation push in runSimulation
 
   const [tab, setTab] = useState("feed");
   const [toasts, setToasts] = useState([]);
   const [simulating, setSimulating] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const stored = localStorage.getItem("ng_theme");
+      if (stored !== null) return stored === "dark";
+    } catch (_) {}
+    return false; // default: light theme
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem("ng_theme", darkMode ? "dark" : "light"); } catch (_) {}
+  }, [darkMode]);
 
   // ---- backend connection ----
   const [apiBaseUrl, setApiBaseUrl] = useState("http://localhost:8000");
@@ -1098,6 +1233,18 @@ export default function App() {
           raw_login_failures: 7 + Math.floor(rand() * 6), login_status: "fail",
         });
       }
+    } else if (scenario === "secure_traffic") {
+      // Generate several normal, low-volume events well within baseline — will score green
+      const n = 3 + Math.floor(rand() * 4);
+      for (let i = 0; i < n; i++) {
+        newEvents.push({
+          timestamp_utc: isoMinusMinutes(now, -i * 1.5), entity_id: ent.entity_id, entity_type: ent.entity_type,
+          src_ip: `10.0.1.${10 + i}`, dest_ip: "10.0.0.1", dest_port: [80, 443, 8080][i % 3],
+          bytes_up: Math.round(ent.mu_bytes * (0.4 + rand() * 0.4)),
+          bytes_down: Math.round(ent.mu_bytes * (0.3 + rand() * 0.3)),
+          raw_login_failures: 0, login_status: "success",
+        });
+      }
     } else {
       newEvents = [{
         timestamp_utc: now.toISOString(), entity_id: ent.entity_id, entity_type: ent.entity_type,
@@ -1138,27 +1285,34 @@ export default function App() {
     const newAlerts = [];
     newEvents.forEach((ev) => {
       const s = scoreEvent(ev, ent);
-      if (s.final_risk_pct >= 40) {
-        newAlerts.push({
-          alert_id: alertSeqRef.current++,
-          entity_id: ent.entity_id, entity_type: ent.entity_type,
-          timestamp_utc: ev.timestamp_utc, final_risk_pct: s.final_risk_pct,
-          threat_classification: s.threat_classification, status: "open",
-          debug_scores: { s_ml: s.s_ml_norm, s_stat: s.s_stat_norm, rule_override: s.rule_override_flag },
-        });
-      }
+      const tier = TIER(s.final_risk_pct);
+      // Always push — threats (amber/red) as "open", secure traffic (green) as "secure"
+      newAlerts.push({
+        alert_id: alertSeqRef.current++,
+        entity_id: ent.entity_id, entity_type: ent.entity_type,
+        timestamp_utc: ev.timestamp_utc, final_risk_pct: s.final_risk_pct,
+        threat_classification: tier === "green" ? "NORMAL_TRAFFIC" : s.threat_classification,
+        status: tier === "green" ? "secure" : "open",
+        debug_scores: { s_ml: s.s_ml_norm, s_stat: s.s_stat_norm, rule_override: s.rule_override_flag },
+      });
     });
 
     setTimeout(() => {
       setTelemetry((prev) => [...newEvents, ...prev]);
       setAlerts((prev) => [...newAlerts, ...prev]);
+      // persist the latest alert sequence number so IDs stay unique across reloads
+      try { localStorage.setItem("ng_alert_seq", JSON.stringify(alertSeqRef.current)); } catch (_) {}
       setSimulating(false);
-      if (newAlerts.length > 0) {
-        pushToast(`Simulated ${scenario.replace("_", " ")} on ${ent.entity_id} — ${newAlerts.length} alert${newAlerts.length > 1 ? "s" : ""} raised.`);
-        setTab("feed");
+      const threats = newAlerts.filter((a) => a.status === "open").length;
+      const secure = newAlerts.filter((a) => a.status === "secure").length;
+      if (secure > 0 && threats === 0) {
+        pushToast(`Simulated secure traffic on ${ent.entity_id} — ${secure} secure event${secure > 1 ? "s" : ""} logged.`);
+      } else if (threats > 0) {
+        pushToast(`Simulated ${scenario.replace("_", " ")} on ${ent.entity_id} — ${threats} threat alert${threats > 1 ? "s" : ""} raised.`);
       } else {
         pushToast("Simulated event stayed under the alert threshold.");
       }
+      setTab("feed");
     }, 550);
   }, [connStatus, apiBaseUrl, baselines, buildScenarioEvents, refreshFromBackend, pushToast]);
 
@@ -1166,17 +1320,8 @@ export default function App() {
     const open = alerts.filter((a) => a.status === "open");
     const critical = open.filter((a) => TIER(a.final_risk_pct) === "red").length;
     const elevated = open.filter((a) => TIER(a.final_risk_pct) === "amber").length;
-    const confirmed = alerts.filter((a) => a.status === "confirmed").length;
-    return { open: open.length, critical, elevated, confirmed };
+    return { open: open.length, critical, elevated };
   }, [alerts]);
-
-  const wavePoints = useMemo(() => {
-    const recent = telemetry.slice(0, 40).slice().reverse();
-    if (recent.length < 2) return [0.5, 0.5, 0.5];
-    const max = Math.max(...recent.map((r) => r.bytes_up), 1);
-    return recent.map((r) => Math.min(1, r.bytes_up / max));
-  }, [telemetry]);
-  const hasCritical = stats.critical > 0;
 
   const NAV = [
     { id: "feed", label: "Live alert feed", icon: Radio, count: stats.open },
@@ -1193,13 +1338,24 @@ export default function App() {
   }[tab];
 
   return (
-    <div className="ng-root">
+    <div className="ng-root" data-theme={darkMode ? "dark" : "light"}>
       <style>{STYLE}</style>
 
       <nav className="ng-sidebar">
         <div className="ng-brand">
-          <div className="ng-brand-mark"><Shield size={16} color="#0A0F1C" /></div>
-          <div className="ng-brand-text"><b>NetGuard</b><span>PS17 &middot; campus IDS</span></div>
+          <div className="ng-brand-mark">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2L3 5V10C3 13.87 6.13 17.5 10 18.5C13.87 17.5 17 13.87 17 10V5L10 2Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.5)" strokeWidth="1"/>
+              <circle cx="10" cy="10" r="3" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.2"/>
+              <circle cx="10" cy="10" r="5.5" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.8"/>
+              <line x1="10" y1="10" x2="13.5" y2="6.5" stroke="rgba(255,255,255,0.9)" strokeWidth="1.2" strokeLinecap="round"/>
+              <circle cx="10" cy="10" r="1" fill="white"/>
+            </svg>
+          </div>
+          <div className="ng-brand-text">
+            <span className="ng-brand-name">NetGuard</span>
+            <span className="ng-brand-sub">Campus IDS · PS17</span>
+          </div>
         </div>
         {NAV.map((n) => (
           <button key={n.id} className={`ng-navitem ${tab === n.id ? "active" : ""}`} onClick={() => setTab(n.id)}>
@@ -1234,6 +1390,17 @@ export default function App() {
             </div>
             {connStatus === "error" && connError && <div className="ng-conn-err"><WifiOff size={11} style={{ verticalAlign: "-1px", marginRight: 4 }} />{connError}</div>}
           </div>
+          <button
+            className="ng-btn ng-btn-ghost ng-btn-sm"
+            style={{ width: "100%", marginTop: 8, color: "var(--text-lo)", fontSize: 11 }}
+            onClick={() => {
+              if (!window.confirm("Clear all stored logs and reset to fresh seed data?")) return;
+              ["ng_alerts", "ng_telemetry", "ng_baselines", "ng_alert_seq"].forEach(k => localStorage.removeItem(k));
+              window.location.reload();
+            }}
+          >
+            <X size={11} /> Clear all logs
+          </button>
         </div>
       </nav>
 
@@ -1244,7 +1411,13 @@ export default function App() {
               <div className="ng-page-title ng-display">{pageMeta.title}</div>
               <div className="ng-page-sub">{pageMeta.sub}</div>
             </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+              <button className="ng-theme-toggle" onClick={() => setDarkMode(v => !v)} title={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
+                {darkMode ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+              <button className="ng-btn ng-btn-ghost ng-btn-sm" onClick={() => runSimulation("secure_traffic")} disabled={simulating}>
+                <Shield size={13} /> Simulate secure traffic
+              </button>
               <button className="ng-btn ng-btn-ghost ng-btn-sm" onClick={() => runSimulation("brute_force")} disabled={simulating}>
                 <Zap size={13} /> Simulate brute force
               </button>
@@ -1263,10 +1436,7 @@ export default function App() {
             <div className="ng-stat"><div className="ng-stat-label">Open alerts</div><div className="ng-stat-value">{stats.open}</div></div>
             <div className="ng-stat"><div className="ng-stat-label">Critical</div><div className="ng-stat-value red">{stats.critical}</div></div>
             <div className="ng-stat"><div className="ng-stat-label">Elevated</div><div className="ng-stat-value amber">{stats.elevated}</div></div>
-            <div className="ng-stat"><div className="ng-stat-label">Confirmed threats</div><div className="ng-stat-value">{stats.confirmed}</div></div>
           </div>
-
-          <WaveformBanner points={wavePoints} hasCritical={hasCritical} />
 
           {tab === "feed" && <LiveFeedView alerts={alerts} telemetry={telemetry} onConfirm={handleConfirm} onDismiss={handleDismiss} baselines={baselines} />}
           {tab === "telemetry" && <TelemetryView telemetry={telemetry} />}
