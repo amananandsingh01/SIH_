@@ -765,7 +765,7 @@ function AlertCard({ group, onConfirm, onDismiss, telemetryByEntity, baselines }
   const Icon = ENTITY_ICON[entityType] || Monitor;
   const worst = group.reduce((m, g) => (g.final_risk_pct > m.final_risk_pct ? g : m), group[0]);
   const entEvents = (telemetryByEntity[primary.entity_id] || []).slice(0, 24);
-  const actionable = group.some((g) => g.status === "open");
+  const actionable = primary.status === "open";
 
   return (
     <div className={`ng-card tier-${tier}`}>
@@ -848,6 +848,8 @@ function LiveFeedView({ alerts, telemetry, onConfirm, onDismiss, baselines }) {
 
   const filtered = useMemo(() => {
     return alerts.filter((a) => {
+      // hide dismissed alerts unless the user explicitly filters for them
+      if (a.status === "false_positive" && statusFilter !== "false_positive") return false;
       const tier = TIER(a.final_risk_pct);
       if (!showSecure && tier === "green") return false;
       if (tierFilter !== "all" && tier !== tierFilter) return false;
